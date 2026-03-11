@@ -24,6 +24,7 @@ from error_handlers import register_error_handlers
 
 # Import Alert & Notification components
 from team_notifications import team_notification_service as team_notifier
+from alert_service import alert_service
 
 load_dotenv()
 

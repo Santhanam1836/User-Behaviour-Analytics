@@ -28,13 +28,13 @@ def auth_headers(client):
     user_manager.create_user(
         username='testuser',
         email='test@example.com',
-        password='testpass123',
+        password='Testpass123',
         role='Admin'
     )
     
     # Login
     response = client.post('/auth/login', 
-        json={'username': 'testuser', 'password': 'testpass123'})
+        json={'username': 'testuser', 'password': 'Testpass123'})
     
     data = json.loads(response.data)
     token = data['token']
@@ -47,12 +47,12 @@ def test_login_success(client):
     user_manager.create_user(
         username='logintest',
         email='login@example.com',
-        password='password123',
+        password='Password123',
         role='Viewer'
     )
     
     response = client.post('/auth/login',
-        json={'username': 'logintest', 'password': 'password123'})
+        json={'username': 'logintest', 'password': 'Password123'})
     
     assert response.status_code == 200
     data = json.loads(response.data)
