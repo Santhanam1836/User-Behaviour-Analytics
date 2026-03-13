@@ -18,26 +18,7 @@ import {
 } from "chart.js";
 import { Line, Pie, Bar } from "react-chartjs-2";
 
-// Device Fingerprinting Utility
-const getDeviceFingerprint = () => {
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d');
-  ctx.textBaseline = 'top';
-  ctx.font = '14px Arial';
-  ctx.fillText('fingerprint', 2, 2);
-  const canvasData = canvas.toDataURL();
-
-  const fingerprint = {
-    userAgent: navigator.userAgent,
-    language: navigator.language,
-    platform: navigator.platform,
-    screenResolution: `${window.screen.width}x${window.screen.height}`,
-    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    canvasHash: canvasData.substring(0, 50)
-  };
-
-  return `FP-${btoa(JSON.stringify(fingerprint)).substring(0, 20)}`;
-};
+// Device Fingerprinting Utility removed as it was unused
 
 ChartJS.register(
   LineElement,
@@ -62,7 +43,7 @@ function App() {
 
   // App State
   const [logs, setLogs] = useState([]);
-  const [alert, setAlert] = useState(false);
+  const [, setAlert] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -96,6 +77,7 @@ function App() {
     };
 
     checkAuth();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -117,6 +99,7 @@ function App() {
     return () => {
       socket.off("new_activity", handleNewActivity);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated]);
 
   const login = async (username, password) => {
