@@ -21,14 +21,16 @@ class AlertService:
     """Service for sending email alerts on high-risk activity."""
 
     def __init__(self):
-        self.smtp_host = os.getenv('SMTP_HOST', 'smtp.gmail.com')
-        self.smtp_port = int(os.getenv('SMTP_PORT', 587))
-        self.smtp_user = os.getenv('SMTP_USER', '')
-        self.smtp_password = os.getenv('SMTP_PASSWORD', '')
-        self.from_email = os.getenv('FROM_EMAIL', self.smtp_user)
+        self.smtp_host = os.getenv("SMTP_HOST", "smtp.gmail.com")
+        self.smtp_port = int(os.getenv("SMTP_PORT", 587))
+        self.smtp_user = os.getenv("SMTP_USER", "")
+        self.smtp_password = os.getenv("SMTP_PASSWORD", "")
+        self.from_email = os.getenv("FROM_EMAIL", self.smtp_user)
         self.configured = bool(self.smtp_user and self.smtp_password)
 
-    def send_email_alert(self, to_email: str, subject: str, body_text: str, body_html: str = None) -> bool:
+    def send_email_alert(
+        self, to_email: str, subject: str, body_text: str, body_html: str = None
+    ) -> bool:
         """
         Send an email alert.
 
@@ -53,17 +55,17 @@ class AlertService:
             return False
 
         try:
-            msg = MIMEMultipart('alternative')
-            msg['Subject'] = subject
-            msg['From'] = self.from_email
-            msg['To'] = to_email
+            msg = MIMEMultipart("alternative")
+            msg["Subject"] = subject
+            msg["From"] = self.from_email
+            msg["To"] = to_email
 
             # Attach plain-text part first (fallback for email clients)
-            msg.attach(MIMEText(body_text, 'plain'))
+            msg.attach(MIMEText(body_text, "plain"))
 
             # Attach HTML part if provided
             if body_html:
-                msg.attach(MIMEText(body_html, 'html'))
+                msg.attach(MIMEText(body_html, "html"))
 
             with smtplib.SMTP(self.smtp_host, self.smtp_port, timeout=10) as server:
                 server.ehlo()
@@ -75,7 +77,9 @@ class AlertService:
             return True
 
         except smtplib.SMTPAuthenticationError:
-            logger.error("❌ SMTP authentication failed. Check SMTP_USER and SMTP_PASSWORD.")
+            logger.error(
+                "❌ SMTP authentication failed. Check SMTP_USER and SMTP_PASSWORD."
+            )
             return False
         except smtplib.SMTPException as e:
             logger.error(f"❌ SMTP error sending email: {e}")
@@ -84,7 +88,9 @@ class AlertService:
             logger.error(f"❌ Unexpected error sending email alert: {e}")
             return False
 
-    def send_high_risk_alert(self, user_id: str, risk_score: float, email: str = None) -> bool:
+    def send_high_risk_alert(
+        self, user_id: str, risk_score: float, email: str = None
+    ) -> bool:
         """
         Send a high-risk activity alert email.
 
@@ -96,7 +102,7 @@ class AlertService:
         Returns:
             True if sent successfully, False otherwise
         """
-        recipient = email or os.getenv('ALERT_EMAIL', '')
+        recipient = email or os.getenv("ALERT_EMAIL", "")
 
         if not recipient:
             logger.warning(
